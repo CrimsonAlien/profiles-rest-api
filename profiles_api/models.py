@@ -7,14 +7,16 @@ from django.contrib.auth.models import BaseUserManager
 class UserProfileManager(BaseUserManager):
     """ Manger for user profiles"""
     def create_user(self,email,name,password=None):
-      if not email:
-          raise ValueError("Provide email address")
-          email=self.normalize_email(email)
-          user=self.model(email=email,name=name)
+        if not email:
+           raise ValueError("Email address field is empty")
+           
+        email=self.normalize_email(email)
+        user=self.model(email=email,name=name)
 
-          user.set_password(password)
-          user.save(using=self.db)
-          return user
+        user.set_password(password)
+        user.save(using=self.db)
+          
+        return user
 
     def create_superuser(self,email,name,password):
             """Create and save a new superuser with given details"""
@@ -38,9 +40,9 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
     objects=UserProfileManager()
 
     USERNAME_FIELD='email'
-    REQUIRED_FIELD=['name']
+    REQUIRED_FIELDS=['name']
 
-    def get_full_name(Self):
+    def get_full_name(self):
        """Retrieve full name of user"""
        return self.name
 
